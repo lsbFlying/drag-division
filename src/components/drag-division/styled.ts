@@ -2,14 +2,14 @@ import styled from "styled-components";
 import { DivisionDirection } from "./index";
 
 interface Props {
-	/** 垂直方向分割的子元素高度(可以是百分比或者数字像素值，禁止calc)（默认对半分） */
-	topHeight: number | string;
-	/** 水平方向分割的子元素宽度(可以是百分比或者数字像素值，禁止calc)（默认对半分） */
-	leftWidth: number | string;
-	/** 分割方向(默认垂直方向分割) */
-	divisionDirection: DivisionDirection;
-	/** 分割线所在区域的高度/宽度(默认10px) */
-	splitArea: number;
+  /** 垂直方向分割的子元素高度(可以是百分比或者数字像素值，禁止calc)（默认对半分） */
+  topHeight: number | string;
+  /** 水平方向分割的子元素宽度(可以是百分比或者数字像素值，禁止calc)（默认对半分） */
+  leftWidth: number | string;
+  /** 分割方向(默认垂直方向分割) */
+  divisionDirection: DivisionDirection;
+  /** 分割线所在区域的高度/宽度(默认10px) */
+  splitArea: number;
 }
 
 export const DragDivisionWrap = styled.div<Props>`
