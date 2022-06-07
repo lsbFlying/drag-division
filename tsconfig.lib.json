@@ -1,0 +1,20 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "rootDir": "src",
+        "outDir": "es",
+        "declaration": true,
+        "sourceMap": true,
+        "declarationDir": "es",
+        "target": "es5",
+        "noEmit": false,
+        "isolatedModules": false,
+        "allowJs": false,
+        "jsx": "react",
+        "esModuleInterop": true
+    },
+    "include":[
+        "src/components",
+        "src/react-app-env.d.ts"
+    ],
+}

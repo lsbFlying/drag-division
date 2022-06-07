@@ -1,0 +1,58 @@
+{
+  "name": "drag-division",
+  "version": "0.0.19",
+  "dependencies": {},
+  "devDependencies": {
+    "copy-webpack-plugin": "^4.6.0",
+    "webpack-cli": "^3.3.0",
+    "@types/lodash": "^4.14.175",
+    "lodash": "^4.17.21",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/styled-components": "^5.1.15",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "^3.1.1",
+    "styled-components": "^5.3.1",
+    "typescript": "^4.1.2",
+    "web-vitals": "^1.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "publish-beta": "npm publish --tag beta",
+    "lib": "npx rimraf es && npx webpack-cli --config build-lib/build.webpack.config.js && npx typescript@4.1.2 -p tsconfig.lib.json",
+    "prepublishOnly": "npm run lib"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "description": "This project was perfect scroll container components",
+  "main": "es/components/index.js",
+  "typings": "es/components/index.d.ts",
+  "files": [
+    "es"
+  ],
+  "keywords": ["drag", "division", "react", "line", "crossLine"],
+  "author": "liushanbao <1262300490@qq.com>",
+  "license": "MIT",
+  "repository": "https://github.com/lsbFlying/drag-division.git",
+  "bugs": "https://github.com/lsbFlying/drag-division/issues",
+  "homepage": "https://github.com/lsbFlying/drag-division"
+}
