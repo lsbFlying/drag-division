@@ -1,52 +1,7 @@
 import * as React from "react";
-import { DragDivisionWrap } from "./styled";
-import { ICSS, ICSSProps } from "../interface";
 import uniqueId from "lodash.uniqueid";
-
-export type DivisionDirection = "vertical" | "horizontal" | "cross";
-
-type Props = ICSSProps & {
-  /** 分割方向(默认垂直方向分割)*/
-  divisionDirection: DivisionDirection;
-  /** 分割线所在区域的高度/宽度(默认10px)(不想写百分比了，实在是太麻烦了，就数字像素值吧) */
-  splitArea: number;
-  /** 垂直方向分割的子元素 */
-  topNode?: React.ReactNode;
-  /** 垂直方向分割的子元素 */
-  bottomNode?: React.ReactNode;
-  /** 水平方向分割的子元素 */
-  leftNode?: React.ReactNode;
-  /** 水平方向分割的子元素 */
-  rightNode?: React.ReactNode;
-  /** 十字交叉方向分割的子元素 */
-  topLeftNode?: React.ReactNode;
-  /** 十字交叉方向分割的子元素 */
-  topRightNode?: React.ReactNode;
-  /** 十字交叉方向分割的子元素 */
-  bottomLeftNode?: React.ReactNode;
-  /** 十字交叉方向分割的子元素 */
-  bottomRightNode?: React.ReactNode;
-  /** 十字交叉方向分割子元素样式 */
-  crossItemStyle?: React.CSSProperties;
-  /** 垂直方向的子元素高度(默认对半)(可以是百分比或者数字像素值，禁止calc) */
-  topHeight?: number | string;
-  /** 水平方向的子元素宽度(默认对半)(可以是百分比或者数字像素值，禁止calc) */
-  leftWidth?: number | string;
-  /** 分割拖拽的最小高度/宽度(可以是百分比或者数字像素值，禁止calc) */
-  topMinHeight?: number | string;
-  /** 分割拖拽的最小高度/宽度(可以是百分比或者数字像素值，禁止calc) */
-  bottomMinHeight?: number | string;
-  /** 分割拖拽的最小高度/宽度(可以是百分比或者数字像素值，禁止calc) */
-  leftMinWidth?: number | string;
-  /** 分割拖拽的最小高度/宽度(可以是百分比或者数字像素值，禁止calc) */
-  rightMinWidth?: number | string;
-  /** 禁用拖拽分割 */
-  disabled: boolean;
-};
-interface State {
-  /** id */
-  mainId: string;
-}
+import { DragDivisionWrap } from "./styled";
+import { ICSS, DragDivisionProps, DragDivisionState } from "../interface";
 
 /**
  * 拖拽分割组件
@@ -54,9 +9,9 @@ interface State {
  * @author liushanbao
  * @class DragDivision
  */
-export class DragDivision extends React.PureComponent<Props, State> implements ICSS {
+export class DragDivision extends React.PureComponent<DragDivisionProps, DragDivisionState> implements ICSS {
   
-  constructor(props: Props) {
+  constructor(props: DragDivisionProps) {
     super(props);
     this.state = {
       mainId: uniqueId("DragDivision"),
@@ -84,63 +39,92 @@ export class DragDivision extends React.PureComponent<Props, State> implements I
   /** 十字线的缓存定位 */
   private crossCacheTop = 0;
   
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
+  componentDidUpdate(prevProps: Readonly<DragDivisionProps>, prevState: Readonly<DragDivisionState>, snapshot?: any) {
     const {
-      disabled, divisionDirection, splitArea, topHeight, leftWidth, topMinHeight, bottomMinHeight, leftMinWidth, rightMinWidth,
+      disabled, divisionDirection, splitArea, topHeight,
+      leftWidth, topMinHeight, bottomMinHeight, leftMinWidth, rightMinWidth,
     } = this.props;
+    
     if (disabled) return;
+    
     const { mainId } = this.state;
+    
     if (topHeight !== prevProps.topHeight && topHeight && divisionDirection === "vertical") {
-      (document.getElementById(`${mainId}Top`) as HTMLElement).style.height = typeof topHeight === "number" ? `${topHeight}px` : topHeight;
+      (document.getElementById(`${mainId}Top`) as HTMLElement).style.height = typeof topHeight === "number"
+        ? `${topHeight}px`
+        : topHeight;
       (document.getElementById(`${mainId}Bottom`) as HTMLElement).style.height = `calc(${
         100 - (typeof topHeight === "string" ? Number(topHeight.replace("%", "")) : 0)
       }% - ${(typeof topHeight === "number" ? topHeight : 0) + splitArea}px)`;
     }
+    
     if (leftWidth !== prevProps.leftWidth && leftWidth && divisionDirection === "horizontal") {
-      (document.getElementById(`${mainId}Left`) as HTMLElement).style.width = typeof leftWidth === "number" ? `${leftWidth}px` : leftWidth;
+      (document.getElementById(`${mainId}Left`) as HTMLElement).style.width = typeof leftWidth === "number"
+        ? `${leftWidth}px`
+        : leftWidth;
       (document.getElementById(`${mainId}Right`) as HTMLElement).style.width = `calc(${
         100 - (typeof leftWidth === "string" ? Number(leftWidth.replace("%", "")) : 0)
       }% - ${(typeof leftWidth === "number" ? leftWidth : 0) + splitArea}px)`;
     }
+    
     if (topMinHeight && topMinHeight !== prevProps.topMinHeight && divisionDirection === "vertical") {
-      (document.getElementById(`${mainId}Top`) as HTMLElement).style.minHeight = typeof topMinHeight === "number" ?
-        `${topMinHeight}px` : topMinHeight;
+      (document.getElementById(`${mainId}Top`) as HTMLElement).style.minHeight = typeof topMinHeight === "number"
+        ? `${topMinHeight}px`
+        : topMinHeight;
     }
+    
     if (topMinHeight && topMinHeight !== prevProps.topMinHeight && divisionDirection === "cross") {
-      (document.getElementById(`${mainId}TopLeft`) as HTMLElement).style.minHeight = typeof topMinHeight === "number" ?
-        `${topMinHeight}px` : topMinHeight;
-      (document.getElementById(`${mainId}TopRight`) as HTMLElement).style.minHeight = typeof topMinHeight === "number" ?
-        `${topMinHeight}px` : topMinHeight;
+      (document.getElementById(`${mainId}TopLeft`) as HTMLElement).style.minHeight = typeof topMinHeight === "number"
+        ? `${topMinHeight}px`
+        : topMinHeight;
+      (document.getElementById(`${mainId}TopRight`) as HTMLElement).style.minHeight = typeof topMinHeight === "number"
+        ? `${topMinHeight}px`
+        : topMinHeight;
     }
+    
     if (bottomMinHeight && bottomMinHeight !== prevProps.bottomMinHeight && divisionDirection === "vertical") {
-      (document.getElementById(`${mainId}Bottom`) as HTMLElement).style.minHeight = typeof bottomMinHeight === "number" ?
-        `${bottomMinHeight}px` : bottomMinHeight;
+      (document.getElementById(`${mainId}Bottom`) as HTMLElement).style.minHeight = typeof bottomMinHeight === "number"
+        ? `${bottomMinHeight}px`
+        : bottomMinHeight;
     }
+    
     if (bottomMinHeight && bottomMinHeight !== prevProps.bottomMinHeight && divisionDirection === "cross") {
-      (document.getElementById(`${mainId}BottomLeft`) as HTMLElement).style.minHeight = typeof bottomMinHeight === "number" ?
-        `${bottomMinHeight}px` : bottomMinHeight;
-      (document.getElementById(`${mainId}BottomRight`) as HTMLElement).style.minHeight = typeof bottomMinHeight === "number" ?
-        `${bottomMinHeight}px` : bottomMinHeight;
+      (document.getElementById(`${mainId}BottomLeft`) as HTMLElement).style.minHeight = typeof bottomMinHeight === "number"
+        ? `${bottomMinHeight}px`
+        : bottomMinHeight;
+      (document.getElementById(`${mainId}BottomRight`) as HTMLElement).style.minHeight = typeof bottomMinHeight === "number"
+        ? `${bottomMinHeight}px`
+        : bottomMinHeight;
     }
+    
     if (leftMinWidth && leftMinWidth !== prevProps.leftMinWidth && divisionDirection === "horizontal") {
-      (document.getElementById(`${mainId}Left`) as HTMLElement).style.minWidth = typeof leftMinWidth === "number" ?
-        `${leftMinWidth}px` : leftMinWidth;
+      (document.getElementById(`${mainId}Left`) as HTMLElement).style.minWidth = typeof leftMinWidth === "number"
+        ? `${leftMinWidth}px`
+        : leftMinWidth;
     }
+    
     if (leftMinWidth && leftMinWidth !== prevProps.leftMinWidth && divisionDirection === "cross") {
-      (document.getElementById(`${mainId}TopLeft`) as HTMLElement).style.minWidth = typeof leftMinWidth === "number" ?
-        `${leftMinWidth}px` : leftMinWidth;
-      (document.getElementById(`${mainId}BottomLeft`) as HTMLElement).style.minWidth = typeof leftMinWidth === "number" ?
-        `${leftMinWidth}px` : leftMinWidth;
+      (document.getElementById(`${mainId}TopLeft`) as HTMLElement).style.minWidth = typeof leftMinWidth === "number"
+        ? `${leftMinWidth}px`
+        : leftMinWidth;
+      (document.getElementById(`${mainId}BottomLeft`) as HTMLElement).style.minWidth = typeof leftMinWidth === "number"
+        ? `${leftMinWidth}px`
+        : leftMinWidth;
     }
+    
     if (rightMinWidth && rightMinWidth !== prevProps.rightMinWidth && divisionDirection === "horizontal") {
-      (document.getElementById(`${mainId}Right`) as HTMLElement).style.minWidth = typeof rightMinWidth === "number" ?
-        `${rightMinWidth}px` : rightMinWidth;
+      (document.getElementById(`${mainId}Right`) as HTMLElement).style.minWidth = typeof rightMinWidth === "number"
+        ? `${rightMinWidth}px`
+        : rightMinWidth;
     }
+    
     if (rightMinWidth && rightMinWidth !== prevProps.rightMinWidth && divisionDirection === "cross") {
-      (document.getElementById(`${mainId}TopRight`) as HTMLElement).style.minWidth = typeof rightMinWidth === "number" ?
-        `${rightMinWidth}px` : rightMinWidth;
-      (document.getElementById(`${mainId}BottomRight`) as HTMLElement).style.minWidth = typeof rightMinWidth === "number" ?
-        `${rightMinWidth}px` : rightMinWidth;
+      (document.getElementById(`${mainId}TopRight`) as HTMLElement).style.minWidth = typeof rightMinWidth === "number"
+        ? `${rightMinWidth}px`
+        : rightMinWidth;
+      (document.getElementById(`${mainId}BottomRight`) as HTMLElement).style.minWidth = typeof rightMinWidth === "number"
+        ? `${rightMinWidth}px`
+        : rightMinWidth;
     }
   }
   
@@ -175,12 +159,15 @@ export class DragDivision extends React.PureComponent<Props, State> implements I
       const currentTopHeight = this.initTopHeight + offset;
   
       if (topMinHeight) {
-        (document.getElementById(`${mainId}Top`) as HTMLElement).style.minHeight = typeof topMinHeight === "number" ?
-          `${topMinHeight}px` : topMinHeight;
+        (document.getElementById(`${mainId}Top`) as HTMLElement).style.minHeight = typeof topMinHeight === "number"
+          ? `${topMinHeight}px`
+          : topMinHeight;
       }
+      
       if (bottomMinHeight) {
-        (document.getElementById(`${mainId}Bottom`) as HTMLElement).style.minHeight = typeof bottomMinHeight === "number" ?
-          `${bottomMinHeight}px` : bottomMinHeight;
+        (document.getElementById(`${mainId}Bottom`) as HTMLElement).style.minHeight = typeof bottomMinHeight === "number"
+          ? `${bottomMinHeight}px`
+          : bottomMinHeight;
       }
       
       (document.getElementById(`${mainId}Top`) as HTMLElement).style.height = `${currentTopHeight}px`;
@@ -190,12 +177,15 @@ export class DragDivision extends React.PureComponent<Props, State> implements I
       const currentLeftWidth = this.initLeftWidth + offset;
   
       if (leftMinWidth) {
-        (document.getElementById(`${mainId}Left`) as HTMLElement).style.minWidth = typeof leftMinWidth === "number" ?
-          `${leftMinWidth}px` : leftMinWidth;
+        (document.getElementById(`${mainId}Left`) as HTMLElement).style.minWidth = typeof leftMinWidth === "number"
+          ? `${leftMinWidth}px`
+          : leftMinWidth;
       }
+      
       if (rightMinWidth) {
-        (document.getElementById(`${mainId}Right`) as HTMLElement).style.minWidth = typeof rightMinWidth === "number" ?
-          `${rightMinWidth}px` : rightMinWidth;
+        (document.getElementById(`${mainId}Right`) as HTMLElement).style.minWidth = typeof rightMinWidth === "number"
+          ? `${rightMinWidth}px`
+          : rightMinWidth;
       }
       
       (document.getElementById(`${mainId}Left`) as HTMLElement).style.width = `${currentLeftWidth}px`;
@@ -328,42 +318,56 @@ export class DragDivision extends React.PureComponent<Props, State> implements I
     (document.getElementById(`${mainId}crossDragLine`) as HTMLElement).style.top = `calc(50% + ${newOffsetY}px)`;
     
     if (topMinHeight) {
-      (document.getElementById(`${mainId}TopLeft`) as HTMLElement).style.minHeight = typeof topMinHeight === "number" ?
-        `${topMinHeight}px` : topMinHeight;
-      (document.getElementById(`${mainId}TopRight`) as HTMLElement).style.minHeight = typeof topMinHeight === "number" ?
-        `${topMinHeight}px` : topMinHeight;
+      (document.getElementById(`${mainId}TopLeft`) as HTMLElement).style.minHeight = typeof topMinHeight === "number"
+        ? `${topMinHeight}px`
+        : topMinHeight;
+      (document.getElementById(`${mainId}TopRight`) as HTMLElement).style.minHeight = typeof topMinHeight === "number"
+        ? `${topMinHeight}px`
+        : topMinHeight;
     }
+    
     if (bottomMinHeight) {
-      (document.getElementById(`${mainId}BottomLeft`) as HTMLElement).style.minHeight = typeof bottomMinHeight === "number" ?
-        `${bottomMinHeight}px` : bottomMinHeight;
-      (document.getElementById(`${mainId}BottomRight`) as HTMLElement).style.minHeight = typeof bottomMinHeight === "number" ?
-        `${bottomMinHeight}px` : bottomMinHeight;
+      (document.getElementById(`${mainId}BottomLeft`) as HTMLElement).style.minHeight = typeof bottomMinHeight === "number"
+        ? `${bottomMinHeight}px`
+        : bottomMinHeight;
+      (document.getElementById(`${mainId}BottomRight`) as HTMLElement).style.minHeight = typeof bottomMinHeight === "number"
+        ? `${bottomMinHeight}px`
+        : bottomMinHeight;
     }
     
     if (leftMinWidth) {
-      (document.getElementById(`${mainId}TopLeft`) as HTMLElement).style.minWidth = typeof leftMinWidth === "number" ?
-        `${leftMinWidth}px` : leftMinWidth;
-      (document.getElementById(`${mainId}BottomLeft`) as HTMLElement).style.minWidth = typeof leftMinWidth === "number" ?
-        `${leftMinWidth}px` : leftMinWidth;
+      (document.getElementById(`${mainId}TopLeft`) as HTMLElement).style.minWidth = typeof leftMinWidth === "number"
+        ? `${leftMinWidth}px`
+        : leftMinWidth;
+      (document.getElementById(`${mainId}BottomLeft`) as HTMLElement).style.minWidth = typeof leftMinWidth === "number"
+        ? `${leftMinWidth}px`
+        : leftMinWidth;
     }
+    
     if (rightMinWidth) {
-      (document.getElementById(`${mainId}TopRight`) as HTMLElement).style.minWidth = typeof rightMinWidth === "number" ?
-        `${rightMinWidth}px` : rightMinWidth;
-      (document.getElementById(`${mainId}BottomRight`) as HTMLElement).style.minWidth = typeof rightMinWidth === "number" ?
-        `${rightMinWidth}px` : rightMinWidth;
+      (document.getElementById(`${mainId}TopRight`) as HTMLElement).style.minWidth = typeof rightMinWidth === "number"
+        ? `${rightMinWidth}px`
+        : rightMinWidth;
+      (document.getElementById(`${mainId}BottomRight`) as HTMLElement).style.minWidth = typeof rightMinWidth === "number"
+        ? `${rightMinWidth}px`
+        : rightMinWidth;
     }
     
     // 由于flex布局，这里flex-wrap换行后对于每个元素宽高的影响是相互的，导致最终的呈现状态不太好，这里需要最小值(中间的间隔8)加一来保证布局的稳定
     const currentTopHeightTemp = crossWrapHeightTemp && currentTopHeight
       ? currentTopHeight <= (8 + topMinHeightTemp)
         ? (8.1 + topMinHeightTemp)
-        : currentTopHeight >= (crossWrapHeightTemp - 20 + topMinHeightTemp) ? (crossWrapHeightTemp - 20 + topMinHeightTemp) : currentTopHeight
+        : currentTopHeight >= (crossWrapHeightTemp - 20 + topMinHeightTemp)
+          ? (crossWrapHeightTemp - 20 + topMinHeightTemp)
+          : currentTopHeight
       : currentTopHeight;
     
     const currentLeftWidthTemp = crossWrapWidthTemp && currentLeftWidth
       ? currentLeftWidth <= (8 + leftMinWidthTemp)
         ? (8.1 + leftMinWidthTemp)
-        : currentLeftWidth >= (crossWrapWidthTemp - 20 + leftMinWidthTemp) ? (crossWrapWidthTemp - 20 + leftMinWidthTemp) : currentLeftWidth
+        : currentLeftWidth >= (crossWrapWidthTemp - 20 + leftMinWidthTemp)
+          ? (crossWrapWidthTemp - 20 + leftMinWidthTemp)
+          : currentLeftWidth
       :
       currentLeftWidth;
     

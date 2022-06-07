@@ -4,6 +4,7 @@
 
 ## DragDivision
 分割拖拽组件，可上下方向分割拖拽，左右方向分割拖拽，可十字交叉垂直与水平方向双向拖拽
+(注意：容器层本身继承父节点的宽高，父节点或者容器层本身的宽高不能变化，否则会影响拖拽效果布局)
 
 ## Install
 ```sh
@@ -21,7 +22,6 @@ Then open [http://localhost:3000](http://localhost:3000) to view it in the brows
 ```tsx
 import { DragDivision } from "drag-division";
 function App() {
-  // demo
   return (
     <DragDivision
       topNode={<div className="topDiv">123</div>}
