@@ -1,15 +1,12 @@
 import * as React from "react";
 import { DragDivisionWrap } from "./styled";
 import { ICSS, ICSSProps } from "../interface";
-import { uniqueId } from "lodash";
+import uniqueId from "lodash.uniqueid";
 
 export type DivisionDirection = "vertical" | "horizontal" | "cross";
 
 type Props = ICSSProps & {
-  /**
-   * 分割方向(默认垂直方向分割)
-   * todo cross十字交叉的功能有点瑕疵，待完善调整。。。
-   */
+  /** 分割方向(默认垂直方向分割)*/
   divisionDirection: DivisionDirection;
   /** 分割线所在区域的高度/宽度(默认10px)(不想写百分比了，实在是太麻烦了，就数字像素值吧) */
   splitArea: number;
@@ -319,8 +316,12 @@ export class DragDivision extends React.PureComponent<Props, State> implements I
     const crossWrapWidthTemp = crossWrapWidth - (leftMinWidthTemp + rightMinWidthTemp);
     const crossWrapHeightTemp = crossWrapHeight - (topMinHeightTemp + bottomMinHeightTemp);
     
-    const newOffsetX = Math.abs(newOffsetXTemp) > (crossWrapWidthTemp / 2 - 12) ? (newOffsetXTemp < 0 ? -1 : 1) * (crossWrapWidthTemp / 2 - 12 - (newOffsetXTemp > 0 ? 4 : 0)) : newOffsetXTemp;
-    const newOffsetY = Math.abs(newOffsetYTemp) > (crossWrapHeightTemp / 2 - 12) ? (newOffsetYTemp < 0 ? -1 : 1) * (crossWrapHeightTemp / 2 + 12 + (newOffsetYTemp < 0 ? -24 : -28)) : newOffsetYTemp;
+    const newOffsetX = Math.abs(newOffsetXTemp) > (crossWrapWidthTemp / 2 - 12)
+      ? (newOffsetXTemp < 0 ? -1 : 1) * (crossWrapWidthTemp / 2 - (newOffsetXTemp > 0 ? 16 : 12))
+      : newOffsetXTemp;
+    const newOffsetY = Math.abs(newOffsetYTemp) > (crossWrapHeightTemp / 2 - 12)
+      ? (newOffsetYTemp < 0 ? -1 : 1) * (crossWrapHeightTemp / 2 + (newOffsetYTemp < 0 ? -12 : -16))
+      : newOffsetYTemp;
     
     // 十字线的定位更新
     (document.getElementById(`${mainId}crossDragLine`) as HTMLElement).style.left = `calc(50% + ${newOffsetX}px)`;
