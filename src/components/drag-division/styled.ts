@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { DivisionDirection } from "./index";
+import { DivisionDirection } from "../interface";
 
 interface Props {
   /** 垂直方向分割的子元素高度(可以是百分比或者数字像素值，禁止calc)（默认对半分） */
